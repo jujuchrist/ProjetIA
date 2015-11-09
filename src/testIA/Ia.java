@@ -32,7 +32,9 @@ public class Ia extends Thread{
 			}
 			
 			if(doitTraiter){
-				this.fenetre.addTexteOutPut(Author.IA, "Tu as dit : " + currentPhrase);
+				String reponse = traiter(currentPhrase);
+				if(reponse != null)
+					this.fenetre.addTexteOutPut(Author.IA, reponse);
 			}
 			
 			try {
@@ -42,6 +44,18 @@ public class Ia extends Thread{
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	private String traiter(String currentPhrase) {
+		String[] lstMots = currentPhrase.split("\\s+");
+		String result = "";
+		for(String str : lstMots){
+			result += str + " ";
+		}
+		if(result.length()>0){
+			return result.substring(0, result.length()-1);
+		}
+		return null;
 	}
 
 }
