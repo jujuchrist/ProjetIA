@@ -32,7 +32,8 @@ public class FenetreIA extends JFrame implements KeyListener {
 	    this.setLocationRelativeTo(null);         
 	    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    
-	    this.robot = new Ia();
+	    this.robot = new Ia(this);
+	    this.robot.start();
 	   
 	    this.layoutMain = new GridBagLayout();
 	    this.setLayout(this.layoutMain);
@@ -94,7 +95,7 @@ public class FenetreIA extends JFrame implements KeyListener {
 		}
 	}
 
-	private void addTexteOutPut(Author auth, String pText) {
+	synchronized private void  addTexteOutPut(Author auth, String pText) {
 		this.listDiscussion.add(new Phrase(auth, pText));
 		while(this.listDiscussion.size()>50)
 			this.listDiscussion.remove(0);
