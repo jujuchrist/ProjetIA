@@ -12,6 +12,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 
 public class FenetreIA extends JFrame implements KeyListener {
@@ -23,6 +24,8 @@ public class FenetreIA extends JFrame implements KeyListener {
 	private GridBagLayout layoutMain;
 	private JTextArea inputArea;
 	private JTextArea outputArea;
+	JScrollPane scrPanIn;
+	JScrollPane scrPanOut;
 	private Vector<Phrase> listDiscussion = new Vector<Phrase>();
 	private Ia robot;
 	
@@ -41,12 +44,13 @@ public class FenetreIA extends JFrame implements KeyListener {
 	    GridBagConstraints gbc = new GridBagConstraints();
 		Border bdr = BorderFactory.createLineBorder(Color.GRAY, 1);
 
-	    JScrollPane scrPan1 = new JScrollPane();
-	    JScrollPane scrPan2 = new JScrollPane();
+	    this.scrPanOut = new JScrollPane();
+	    this.scrPanIn = new JScrollPane();
 
 	    this.inputArea = new JTextArea("");
 	    this.outputArea = new JTextArea("");
 	    this.outputArea.setTabSize(2);
+	    this.outputArea.setEditable(false);
 	    /*this.inputArea.setPreferredSize(new Dimension(250, 250));
 	    this.outputArea.setPreferredSize(new Dimension(250, 250));*/
 
@@ -60,11 +64,11 @@ public class FenetreIA extends JFrame implements KeyListener {
 	    gbc.weightx = 1.0;
 	    gbc.weighty = 1.0;
 	    gbc.fill = GridBagConstraints.BOTH;
-	    scrPan1.setViewportView(this.outputArea);
+	    this.scrPanOut.setViewportView(this.outputArea);
 	    this.outputArea.setWrapStyleWord(true);
 	    this.outputArea.setLineWrap(true);
-	    scrPan1.setBorder(bdr);
-	    this.getContentPane().add(scrPan1,gbc);
+	    this.scrPanOut.setBorder(bdr);
+	    this.getContentPane().add(this.scrPanOut,gbc);
 
 	    //
 	    gbc.gridwidth = 1;
@@ -74,12 +78,12 @@ public class FenetreIA extends JFrame implements KeyListener {
 	    gbc.weightx = 1.0;
 	    gbc.weighty = 1.0;
 	    gbc.fill = GridBagConstraints.BOTH;
-	    scrPan2.setViewportView(this.inputArea);
+	    this.scrPanIn.setViewportView(this.inputArea);
 	    this.inputArea.setWrapStyleWord(true);
 	    this.inputArea.setLineWrap(true);
 	    this.inputArea.addKeyListener(this);
-	    scrPan2.setBorder(bdr);
-	    this.getContentPane().add(scrPan2,gbc);
+	    this.scrPanIn.setBorder(bdr);
+	    this.getContentPane().add(this.scrPanIn,gbc);
 	    
 	    
 	    
@@ -95,7 +99,7 @@ public class FenetreIA extends JFrame implements KeyListener {
 		}
 	}
 
-	synchronized private void  addTexteOutPut(Author auth, String pText) {
+	synchronized public void  addTexteOutPut(Author auth, String pText) {
 		this.listDiscussion.add(new Phrase(auth, pText));
 		while(this.listDiscussion.size()>50)
 			this.listDiscussion.remove(0);
@@ -118,7 +122,14 @@ public class FenetreIA extends JFrame implements KeyListener {
 		}
 		
 		outpt.trim();
+
 		this.outputArea.setText(outpt);
+		SwingUtilities.invokeLater(new Runnable() {
+		          public void run() {
+		        	  scrPanOut.validate();
+		      		  scrPanOut.getVerticalScrollBar().setValue(scrPanOut.getVerticalScrollBar().getMaximum());
+		          }
+		        });
 	}
 
 	@Override

@@ -21,20 +21,26 @@ public class Ia extends Thread{
 	@Override
 	public void run() {
 		while(true){
+			String currentPhrase = "";
+			boolean doitTraiter = false;
 			synchronized(listPhrases){
 				if(this.listPhrases.size()>0){
-					String currentPhrase = this.listPhrases.get(0);
+					currentPhrase = this.listPhrases.get(0);
 					this.listPhrases.remove(0);
-					System.out.println("Traitement de : " + currentPhrase);
+					doitTraiter = true;
 				}
 			}
+			
+			if(doitTraiter){
+				this.fenetre.addTexteOutPut(Author.IA, "Tu as dit : " + currentPhrase);
+			}
+			
 			try {
-				Thread.sleep(5000);
+				Thread.sleep(3000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			System.out.println("Fin de traitement boucle");
 		}
 	}
 
